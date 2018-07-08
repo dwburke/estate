@@ -30,3 +30,17 @@ From the above config, it will search the keys in bottom up priority.  If
 customer_id is not in the query, or the derrived key does not have a value,
 it will move on to the next key up.
 
+":context" and ":key" are part of the http routing ('dev' and 'foo').
+Everything else is optional.
+
+# Adding to your own servce
+
+```
+import "github.com/dwburke/prefs/api/key"
+
+...
+key.SetupRoutes(r)
+...
+
+```
+
