@@ -1,19 +1,12 @@
 package key
 
 import (
-	//"encoding/json"
-	//"io/ioutil"
-	//"os"
 	"errors"
 	"fmt"
 	"regexp"
-	//"reflect"
-	//"strconv"
-	//"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
-	//"github.com/syndtr/goleveldb/leveldb"
 )
 
 //var ldb *leveldb.DB
@@ -21,9 +14,6 @@ import (
 func SetupRoutes(r *gin.Engine) {
 
 	r.GET("/prefs/:context/:key", GetKey)
-	r.GET("/prefs/:context/:app/:name/:key", GetKey)
-
-	//r.GET("/prefs/:context/:key", GetKey)
 	//r.POST("/prefs/:context/:key", SetKey)
 }
 
