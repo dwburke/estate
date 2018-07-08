@@ -10,6 +10,7 @@ Configuration is handled by Viper so file formats are flexible...
 
 Sample yaml config:
 
+```
   prefs:
     port: 4441
     https: true
@@ -19,7 +20,7 @@ Sample yaml config:
   storage:
     type: "mysql"
     dns: "dbuser:password@/prefs?charset=utf8"
-
+```
 
 Example usage:
 
