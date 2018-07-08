@@ -1,5 +1,9 @@
-port: 4441
-https: true
-search:
-- "{context}.someapp.{key}"
-- "{context}.someapp.{customer_id}.{key}"
+prefs:
+  port: 4441
+  https: true
+  search:
+  - "{context}.someapp.{key}"
+  - "{context}.someapp.{customer_id}.{key}"
+storage:
+  type: "mysql"
+  dns: "addict:abc123@/prefs?charset=utf8"

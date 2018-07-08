@@ -55,14 +55,12 @@ func GetKey(c *gin.Context) {
 		"dev.someapp.123456.foo": "bar2",
 	}
 
-	search := viper.GetStringSlice("search")
+	search := viper.GetStringSlice("prefs.search")
 
 	var return_value string
 	var return_key string
 
 	for _, search_key := range search {
-		fmt.Println("Search Key:", search_key)
-
 		trans_key, err := TranslateKey(search_key, &c.Params)
 
 		if err != nil || trans_key == "" {
@@ -72,8 +70,6 @@ func GetKey(c *gin.Context) {
 		if val, ok := test_results[trans_key]; ok {
 			return_value = val
 			return_key = trans_key
-			fmt.Println("Return Key:", return_key)
-			fmt.Println("Return Value:", return_value)
 		}
 	}
 

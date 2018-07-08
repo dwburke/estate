@@ -54,11 +54,12 @@ func TestTranslateKey(t *testing.T) {
 func TestKey(t *testing.T) {
 	viper.SetConfigType("yaml")
 	var yamlExample = []byte(`
-port: 4441
-https: true
-search:
-- "{context}.someapp.{key}"
-- "{context}.someapp.{customer_id}.{key}"
+prefs:
+  port: 4441
+  https: true
+  search:
+  - "{context}.someapp.{key}"
+  - "{context}.someapp.{customer_id}.{key}"
 `)
 
 	viper.ReadConfig(bytes.NewBuffer(yamlExample))
