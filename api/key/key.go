@@ -49,6 +49,7 @@ func GetKey(c *gin.Context) {
 		c.JSON(500, gin.H{
 			"error": err,
 		})
+		return
 	}
 
 	var return_value string
@@ -75,10 +76,12 @@ func GetKey(c *gin.Context) {
 			"key":   return_key,
 			"value": return_value,
 		})
+		return
 	} else {
 		c.JSON(404, gin.H{
 			"error": "Not Found",
 		})
+		return
 	}
 }
 
@@ -89,6 +92,7 @@ func SetKey(c *gin.Context) {
 		c.JSON(500, gin.H{
 			"error": "'value' required",
 		})
+		return
 	}
 
 	var return_key string
@@ -111,6 +115,7 @@ func SetKey(c *gin.Context) {
 		c.JSON(404, gin.H{
 			"error": "key not found",
 		})
+		return
 	}
 
 	// storage object
@@ -119,6 +124,7 @@ func SetKey(c *gin.Context) {
 		c.JSON(500, gin.H{
 			"error": err,
 		})
+		return
 	}
 
 	err = st.Set(return_key, param_value)
