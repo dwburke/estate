@@ -103,6 +103,6 @@ prefs:
 	}
 
 	if data.Key != "dev.someapp.foo" || data.Value != "bar" {
-		t.Errorf("expected 'dev.foo' = bar, got %s = %s", data.Key, data.Value)
+		t.Errorf("expected 'dev.someapp.foo' = bar, got %s = %s", data.Key, data.Value)
 	}
 }
