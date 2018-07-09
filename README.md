@@ -17,18 +17,18 @@ Sample yaml config:
     port: 4441
     https: true
     search:
-      - "{context}.someapp.{customer_id}.{key}"
-      - "{context}.someapp.{key}"
-  storage:
-    type: "mysql"
-    dns: "dbuser:password@/prefs?charset=utf8"
+    - "{context}.someapp.{customer_id}.{key}"
+    - "{context}.someapp.{key}"
+    storage:
+      type: "mysql"
+      dns: "dbuser:password@/prefs?charset=utf8"
 ```
 
 Example usage:
 
   `GET /prefs/dev/foo?customer_id=123456`
 
-From the above config, it will search the keys in bottom up priority.  If 
+From the above config, it will search the keys in top down priority.  If 
 customer_id is not in the query, or the derrived key does not have a value,
 it will move on to the next key up.
 
