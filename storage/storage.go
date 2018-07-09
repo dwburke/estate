@@ -34,7 +34,7 @@ func New() (*Storage, error) {
 func (st *Storage) Set(key string, value string) error {
 	db := st.Handle
 
-	stmt, err := db.Prepare("INSERT into prefs (var, value) values (?, ?)")
+	stmt, err := db.Prepare("replace into prefs (var, value) values (?, ?)")
 	if err != nil {
 		return err
 	}
