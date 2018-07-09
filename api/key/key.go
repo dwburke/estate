@@ -17,6 +17,7 @@ func SetupRoutes(r *gin.Engine) {
 
 	r.GET("/prefs/:context/:key", GetKey)
 	r.POST("/prefs/:context/:key", SetKey)
+	r.DELETE("/prefs/:context/:key", DeleteKey)
 }
 
 // take key template and try to replace everything with param's passed to api
@@ -141,4 +142,51 @@ func SetKey(c *gin.Context) {
 		"key":   return_key,
 		"value": param_value,
 	})
+}
+
+// TODO - matching all params is required
+func DeleteKey(c *gin.Context) {
+	search := viper.GetStringSlice("prefs.search")
+
+	st, err := storage.New()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": err,
+		})
+		return
+	}
+	defer st.Close()
+
+	var return_key string
+
+	for _, search_key := range search {
+		trans_key, err := TranslateKey(search_key, &c.Params)
+
+		// TODO - be more specific about what errors are ok here
+		if err != nil || trans_key == "" {
+			continue
+		}
+
+		return_key = trans_key
+
+		err = st.Delete(trans_key)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": err,
+			})
+			return
+		}
+	}
+
+	if return_key != "" {
+		c.JSON(200, gin.H{
+			"key": return_key,
+		})
+		return
+	} else {
+		c.JSON(404, gin.H{
+			"error": "Not Found",
+		})
+		return
+	}
 }
