@@ -16,7 +16,7 @@ import (
 func SetupRoutes(r *gin.Engine) {
 
 	r.GET("/prefs/:context/:key", GetKey)
-	//r.POST("/prefs/:context/:key", SetKey)
+	r.POST("/prefs/:context/:key", SetKey)
 }
 
 func TranslateKey(template string, p *gin.Params) (string, error) {
@@ -82,23 +82,49 @@ func GetKey(c *gin.Context) {
 	}
 }
 
-//func SetKey(c *gin.Context) {
-//param_context := c.Param("context")
-//param_key := c.Param("key")
+func SetKey(c *gin.Context) {
+	param_value := c.GetString("value")
 
-//if ldb == nil {
-//var err error
-//ldb, err = leveldb.OpenFile("data", nil)
-//if err != nil {
-//c.JSON(500, gin.H{"error": err})
-//return
-//}
-//defer ldb.Close()
-//}
+	if param_value == "" {
+		c.JSON(500, gin.H{
+			"error": "'value' required",
+		})
+	}
 
-//c.JSON(200, gin.H{
-//"context": param_context,
-//"key":     param_key,
-//"value":   "bar",
-//})
-//}
+	var return_key string
+
+	search := viper.GetStringSlice("prefs.search")
+
+	// find matching key to set based on passed in variables
+	for _, search_key := range search {
+		trans_key, err := TranslateKey(search_key, &c.Params)
+
+		if err != nil || trans_key == "" {
+			continue
+		}
+
+		return_key = trans_key
+		break
+	}
+
+	if return_key == "" {
+		c.JSON(404, gin.H{
+			"error": "key not found",
+		})
+	}
+
+	// storage object
+	st, err := storage.New()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": err,
+		})
+	}
+
+	err = st.Set(return_key, param_value)
+
+	c.JSON(200, gin.H{
+		"key":   return_key,
+		"value": param_value,
+	})
+}
