@@ -63,3 +63,19 @@ func (st *Storage) Get(key string) (string, error) {
 		return "", err
 	}
 }
+
+func (st *Storage) Delete(key string) error {
+	db := st.Handle
+
+	stmt, err := db.Prepare("delete from prefs where key = ?")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(key)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
