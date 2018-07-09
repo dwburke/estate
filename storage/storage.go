@@ -12,7 +12,13 @@ type Storage struct {
 
 var err error
 
-// create table prefs (var varchar(255), value text, key(var));
+// create table prefs (var varchar(255), value text, primary key(var));
+
+func (st *Storage) Close() {
+	if st.Handle != nil {
+		st.Handle.Close()
+	}
+}
 
 func New() (*Storage, error) {
 	db, err := sql.Open(viper.GetString("prefs.storage.type"), viper.GetString("prefs.storage.dsn"))
