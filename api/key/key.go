@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"regexp"
 
+	"github.com/dwburke/prefs/storage"
+
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
@@ -40,12 +42,14 @@ func TranslateKey(template string, p *gin.Params) (string, error) {
 }
 
 func GetKey(c *gin.Context) {
-	test_results := map[string]string{
-		"dev.someapp.foo":        "bar",
-		"dev.someapp.123456.foo": "bar2",
-	}
-
 	search := viper.GetStringSlice("prefs.search")
+
+	st, err := storage.New()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": err,
+		})
+	}
 
 	var return_value string
 	var return_key string
