@@ -2,6 +2,8 @@
 Preferences or configuration database, with the ability to specify
 global settings, and per-user or per-server / region /data center/etc overrides.
 
+# Work in progres... not yet fully functional
+
 For example, say you have an application (or microservice) that you you want all
 users to have the same value for the default, but each user could override it
 with their own value.  A flag, a server address, a plugin version...
