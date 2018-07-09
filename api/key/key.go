@@ -19,6 +19,8 @@ func SetupRoutes(r *gin.Engine) {
 	r.POST("/prefs/:context/:key", SetKey)
 }
 
+// take key template and try to replace everything with param's passed to api
+// TODO - optionally require matching all params, return appro error
 func TranslateKey(template string, p *gin.Params) (string, error) {
 	re1, err := regexp.Compile(`{(.*?)}`)
 	if err != nil {
@@ -41,6 +43,7 @@ func TranslateKey(template string, p *gin.Params) (string, error) {
 	return template, nil
 }
 
+// Matching all params is deliberately not required, we want "best match"
 func GetKey(c *gin.Context) {
 	search := viper.GetStringSlice("prefs.search")
 
@@ -65,6 +68,7 @@ func GetKey(c *gin.Context) {
 
 		val, err := st.Get(trans_key)
 
+		// TODO - be more specific about what errors are ok here
 		if err == nil && val != "" {
 			return_value = val
 			return_key = trans_key
@@ -86,6 +90,7 @@ func GetKey(c *gin.Context) {
 	}
 }
 
+// TODO - matching all params is required
 func SetKey(c *gin.Context) {
 	param_value := c.GetString("value")
 
@@ -104,6 +109,7 @@ func SetKey(c *gin.Context) {
 	for _, search_key := range search {
 		trans_key, err := TranslateKey(search_key, &c.Params)
 
+		// TODO - be more specific about what errors are ok here
 		if err != nil || trans_key == "" {
 			continue
 		}
