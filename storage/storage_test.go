@@ -16,11 +16,11 @@ prefs:
   port: 4441
   https: true
   search:
-  - "{context}.someapp.{key}"
   - "{context}.someapp.{customer_id}.{key}"
-storage:
-  type: "mysql"
-  dsn: "addict:abc123@/prefs?charset=utf8"
+  - "{context}.someapp.{key}"
+  storage:
+    type: "mysql"
+    dsn: "addict:abc123@/prefs?charset=utf8"
 `)
 
 	viper.ReadConfig(bytes.NewBuffer(yamlExample))

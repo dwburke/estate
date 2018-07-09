@@ -15,7 +15,7 @@ var err error
 // create table prefs (var varchar(255), value text, key(var));
 
 func New() (*Storage, error) {
-	db, err := sql.Open(viper.GetString("storage.type"), viper.GetString("storage.dsn"))
+	db, err := sql.Open(viper.GetString("prefs.storage.type"), viper.GetString("prefs.storage.dsn"))
 	if err != nil {
 		return nil, err
 	}
