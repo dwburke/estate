@@ -17,8 +17,8 @@ Sample yaml config:
     port: 4441
     https: true
     search:
-      - "{context}.someapp.{key}"
       - "{context}.someapp.{customer_id}.{key}"
+      - "{context}.someapp.{key}"
   storage:
     type: "mysql"
     dns: "dbuser:password@/prefs?charset=utf8"

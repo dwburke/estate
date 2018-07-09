@@ -57,9 +57,12 @@ func GetKey(c *gin.Context) {
 			continue
 		}
 
-		if val, ok := test_results[trans_key]; ok {
+		val, err := st.Get(trans_key)
+
+		if err == nil && val != "" {
 			return_value = val
 			return_key = trans_key
+			break
 		}
 	}
 
