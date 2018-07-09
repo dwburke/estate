@@ -51,6 +51,7 @@ func GetKey(c *gin.Context) {
 		})
 		return
 	}
+	defer st.Close()
 
 	var return_value string
 	var return_key string
@@ -126,6 +127,7 @@ func SetKey(c *gin.Context) {
 		})
 		return
 	}
+	defer st.Close()
 
 	err = st.Set(return_key, param_value)
 
