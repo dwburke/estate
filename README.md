@@ -2,7 +2,8 @@
 Preferences or configuration database, with the ability to specify
 global settings, and per-user or per-server / region /data center/etc overrides.
 
-# Work in progres... not yet fully functional
+## Work in progress... should be fully functional
+- delete isn't safe in some ways yet, and has no tests committed
 
 For example, say you have an application (or microservice) that you you want all
 users to have the same value for the default, but each user could override it
@@ -17,8 +18,8 @@ Sample yaml config:
     port: 4441
     https: true
     search:
-    - "{context}.someapp.{customer_id}.{key}"
-    - "{context}.someapp.{key}"
+    - "{context}.{app}.{customer_id}.{key}"
+    - "{context}.{app}.{key}"
     storage:
       type: "mysql"
       dns: "dbuser:password@/prefs?charset=utf8"
@@ -26,7 +27,7 @@ Sample yaml config:
 
 Example usage:
 
-  `GET /prefs/dev/foo?customer_id=123456`
+  `GET /prefs/dev/foo?app=someapp&customer_id=123456`
 
 From the above config, it will search the keys in top down priority.  If 
 customer_id is not in the query, or the derrived key does not have a value,
@@ -38,11 +39,17 @@ Everything else is optional.
 # Adding to your own servce
 
 ```
-import "github.com/dwburke/prefs/api/key"
-
+import (
+    prefs_routes "github.com/dwburke/prefs/api/key"
+)
 ...
-key.SetupRoutes(r)
+    prefs_routes.SetupRoutes(r)
 ...
 
 ```
 
+# Roadmap
+- multiple storage types (queries are partially mysql specific atm)
+  - postgres
+  - etcd
+  - redis
