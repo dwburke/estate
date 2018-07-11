@@ -2,7 +2,6 @@ package key
 
 import (
 	"errors"
-	"fmt"
 	"regexp"
 
 	"github.com/dwburke/prefs/storage"
