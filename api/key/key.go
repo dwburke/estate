@@ -12,8 +12,12 @@ import (
 
 //var ldb *leveldb.DB
 
-func SetupRoutes(r *gin.Engine) {
+var (
+	ErrNotEnoughValues = errors.New("prefs: not enough values")
+	//ErrAllValuesNotUsed = errors.New("prefs: not found")
+)
 
+func SetupRoutes(r *gin.Engine) {
 	r.GET("/prefs/:context/:key", GetKey)
 	r.POST("/prefs/:context/:key", SetKey)
 	r.DELETE("/prefs/:context/:key", DeleteKey)
@@ -33,7 +37,7 @@ func TranslateKey(template string, p *gin.Params) (string, error) {
 		needed_value, found := p.Get(str[1])
 
 		if found == false {
-			return "", errors.New(fmt.Sprintf("Value for %s not found", str[0]))
+			return "", ErrNotEnoughValues
 		}
 
 		var re2 = regexp.MustCompile(str[0])
@@ -62,14 +66,34 @@ func GetKey(c *gin.Context) {
 	for _, search_key := range search {
 		trans_key, err := TranslateKey(search_key, &c.Params)
 
-		if err != nil || trans_key == "" {
+		if err == ErrNotEnoughValues {
 			continue
+		}
+
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": err,
+			})
+			return
 		}
 
 		val, err := st.Get(trans_key)
 
-		// TODO - be more specific about what errors are ok here
-		if err == nil && val != "" {
+		// no rows, try next key
+		if err == storage.ErrNoRows {
+			continue
+		}
+
+		// unexpected error, fail
+		if err != nil {
+			c.JSON(500, gin.H{
+				"error": err,
+			})
+			return
+		}
+
+		// value? found it!
+		if val != "" {
 			return_value = val
 			return_key = trans_key
 			break
