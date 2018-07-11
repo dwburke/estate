@@ -2,8 +2,14 @@ package storage
 
 import (
 	"database/sql"
+	"errors"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
+)
+
+var (
+	ErrNoRows = errors.New("storage: no rows returned")
 )
 
 type Storage struct {
@@ -56,7 +62,7 @@ func (st *Storage) Get(key string) (string, error) {
 
 	switch err := row.Scan(&value); err {
 	case sql.ErrNoRows:
-		return "", sql.ErrNoRows
+		return "", ErrNoRows
 	case nil:
 		return value, nil
 	default:
