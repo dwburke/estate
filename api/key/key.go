@@ -2,9 +2,11 @@ package key
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 
 	"github.com/dwburke/prefs/storage"
+	"github.com/dwburke/prefs/storage/memory"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -51,13 +53,8 @@ func TranslateKey(template string, p *gin.Params) (string, error) {
 func GetKey(c *gin.Context) {
 	search := viper.GetStringSlice("prefs.search")
 
-	st, err := storage.New()
-	if err != nil {
-		c.JSON(500, gin.H{
-			"error": err,
-		})
-		return
-	}
+	var st storage.Storage
+	st = memory.New()
 	defer st.Close()
 
 	var return_value string
@@ -80,7 +77,7 @@ func GetKey(c *gin.Context) {
 		val, err := st.Get(trans_key)
 
 		// no rows, try next key
-		if err == storage.ErrNoRows {
+		if err == storage.ErrNotFound {
 			continue
 		}
 
@@ -150,16 +147,17 @@ func SetKey(c *gin.Context) {
 	}
 
 	// storage object
-	st, err := storage.New()
+	var st storage.Storage
+	st = memory.New()
+	defer st.Close()
+
+	err := st.Set(return_key, param_value)
 	if err != nil {
 		c.JSON(500, gin.H{
-			"error": err,
+			"error": fmt.Sprintf("Error setting value: %s", err),
 		})
 		return
 	}
-	defer st.Close()
-
-	err = st.Set(return_key, param_value)
 
 	c.JSON(200, gin.H{
 		"key":   return_key,
@@ -171,13 +169,8 @@ func SetKey(c *gin.Context) {
 func DeleteKey(c *gin.Context) {
 	search := viper.GetStringSlice("prefs.search")
 
-	st, err := storage.New()
-	if err != nil {
-		c.JSON(500, gin.H{
-			"error": err,
-		})
-		return
-	}
+	var st storage.Storage
+	st = memory.New()
 	defer st.Close()
 
 	var return_key string
