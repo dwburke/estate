@@ -62,7 +62,7 @@ prefs:
   - "{context}.someapp.{key}"
   storage:
     type: "mysql"
-    dsn: "addict:abc123@/prefs?charset=utf8"
+    dsn: "prefs:abc123@/prefs?charset=utf8"
 `)
 
 	viper.ReadConfig(bytes.NewBuffer(yamlExample))
