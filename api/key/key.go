@@ -3,6 +3,7 @@ package key
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"regexp"
 
 	"github.com/dwburke/prefs/storage"
@@ -113,7 +114,21 @@ func GetKey(c *gin.Context) {
 
 // TODO - matching all params is required
 func SetKey(c *gin.Context) {
-	param_value := c.GetString("value")
+	type E struct {
+		Data string
+	}
+
+	post_data := &E{}
+	c.Bind(post_data)
+	fmt.Println("post_data:", post_data)
+
+	fmt.Println("body:", reflect.TypeOf(c.Request.Body))
+	param_interface, ok := c.Get("value")
+	fmt.Println("ok:", ok)
+	fmt.Println(param_interface)
+
+	var param_value string
+	param_value = param_interface.(string)
 
 	if param_value == "" {
 		c.JSON(500, gin.H{
