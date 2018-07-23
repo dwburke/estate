@@ -53,6 +53,7 @@ func TranslateKey(template string, p *gin.Params) (string, error) {
 func GetKey(c *gin.Context) {
 	search := viper.GetStringSlice("prefs.search")
 
+	// TODO - not the same instance of storage, go find the pages on db middleware
 	var st storage.Storage
 	st = memory.New()
 	defer st.Close()
