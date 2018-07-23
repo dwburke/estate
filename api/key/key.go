@@ -3,17 +3,16 @@ package key
 import (
 	"errors"
 	"fmt"
-	"reflect"
+	//"reflect"
 	"regexp"
 
 	"github.com/dwburke/prefs/storage"
 	"github.com/dwburke/prefs/storage/memory"
 
+	"github.com/dwburke/go-tools"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
-
-//var ldb *leveldb.DB
 
 var (
 	ErrNotEnoughValues = errors.New("prefs: not enough values")
@@ -114,23 +113,12 @@ func GetKey(c *gin.Context) {
 
 // TODO - matching all params is required
 func SetKey(c *gin.Context) {
-	type E struct {
-		Data string
-	}
 
-	post_data := &E{}
-	c.Bind(post_data)
-	fmt.Println("post_data:", post_data)
+	params := tools.AllGinParams(c)
 
-	fmt.Println("body:", reflect.TypeOf(c.Request.Body))
-	param_interface, ok := c.Get("value")
-	fmt.Println("ok:", ok)
-	fmt.Println(param_interface)
+	param_value, ok := params.Get("value")
 
-	var param_value string
-	param_value = param_interface.(string)
-
-	if param_value == "" {
+	if !ok {
 		c.JSON(500, gin.H{
 			"error": "'value' required",
 		})
