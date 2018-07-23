@@ -4,16 +4,18 @@ import (
 	"github.com/dwburke/prefs/storage"
 )
 
+var MemoryStore map[string]string = map[string]string{}
+
 type Keys struct {
-	store map[string]string
+	unused bool
 }
 
 func New() storage.Storage {
-	return &Keys{store: map[string]string{}}
+	return &Keys{}
 }
 
 func (e *Keys) Get(key string) (string, error) {
-	v, ok := e.store[key]
+	v, ok := MemoryStore[key]
 	if !ok {
 		return "", storage.ErrNotFound
 	}
@@ -21,11 +23,15 @@ func (e *Keys) Get(key string) (string, error) {
 }
 
 func (e *Keys) Set(key string, value string) error {
-	e.store[key] = value
+	MemoryStore[key] = value
 	return nil
 }
 
 func (e *Keys) Delete(key string) error {
+	_, ok := MemoryStore[key]
+	if ok {
+		delete(MemoryStore, key)
+	}
 	return nil
 }
 
