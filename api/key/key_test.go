@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
+	"strings"
 	"testing"
 
 	"github.com/gin-contrib/cors"
@@ -72,20 +74,20 @@ prefs:
 	r := gin.Default()
 	r.Use(cors.Default())
 
+	// setup routes
 	r.GET("/prefs/:context/:key", key.GetKey)
 	r.POST("/prefs/:context/:key", key.SetKey)
 
-	params := map[string]interface{}{
-		"key":         "test.foo",
-		"value":       "test.bar",
-		"customer_id": "123456",
-	}
-	jsonstr, err := json.Marshal(params)
-	if err != nil {
-		t.Errorf("Error marshalling params to json: %s", err)
-	}
-	req, _ := http.NewRequest("POST", "/prefs/dev/foo", bytes.NewReader([]byte(jsonstr)))
-	req.Header.Set("Content-Type", "application/json")
+	// ================
+	// set test
+	form := url.Values{}
+	form.Add("key", "test.foo")
+	form.Add("value", "test.bar")
+	form.Add("customer_id", "123456")
+
+	req, _ := http.NewRequest("POST", "/prefs/dev/foo", strings.NewReader(form.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
 	w := httptest.NewRecorder()
 
 	r.ServeHTTP(w, req)
@@ -95,22 +97,21 @@ prefs:
 	}
 	bodyAsString := w.Body.String()
 
-	fmt.Println(bodyAsString)
-
 	type SetData struct {
-		Ok int `json:"ok"`
+		Key   string `json:"key"`
+		Value string `json:"value"`
+		Error string `json:"error"`
 	}
 
 	var set_data SetData
-	err = json.Unmarshal([]byte(bodyAsString), &set_data)
+	err := json.Unmarshal([]byte(bodyAsString), &set_data)
 
 	if err != nil {
 		t.Errorf("Error unmarshalling json: %s", err)
 	}
 
-	if set_data.Ok != 1 {
-		t.Errorf("expected %d got %d", 1, set_data.Ok)
-	}
+	// ================
+	// Get test
 
 	req, _ = http.NewRequest("GET", "/prefs/dev/foo", nil)
 
@@ -141,7 +142,8 @@ prefs:
 		t.Errorf("Error unmarshalling json: %s", err)
 	}
 
-	if get_data.Key != "dev.someapp.foo" || get_data.Value != "bar" {
+	fmt.Println(get_data.Key, get_data.Value)
+	if get_data.Key != "dev.someapp.foo" || get_data.Value != "test.bar" {
 		t.Errorf("expected 'dev.someapp.foo' = bar, got %s = %s", get_data.Key, get_data.Value)
 	}
 }
