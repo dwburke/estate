@@ -7,7 +7,7 @@ import (
 var MemoryStore map[string]string = map[string]string{}
 
 type Keys struct {
-	unused bool
+	storage.Storage
 }
 
 func New() storage.Storage {
