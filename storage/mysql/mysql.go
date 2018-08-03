@@ -3,8 +3,8 @@ package mysql
 import (
 	"database/sql"
 
-	"github.com/dwburke/prefs/storage/common"
-	"github.com/dwburke/prefs/storage/meta"
+	"github.com/dwburke/lode/storage/common"
+	"github.com/dwburke/lode/storage/meta"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
@@ -16,17 +16,17 @@ type Storage struct {
 	tableName string
 }
 
-// create table prefs (var varchar(255), value text, primary key(var));
+// create table lode (var varchar(255), value text, primary key(var));
 
 func New() (*Storage, error) {
-	db, err := sql.Open("mysql", viper.GetString("prefs.storage.dsn"))
+	db, err := sql.Open("mysql", viper.GetString("lode.storage.dsn"))
 	if err != nil {
 		return nil, err
 	}
 
 	st := Storage{
 		Handle:    db,
-		tableName: viper.GetString("prefs.storage.table"),
+		tableName: viper.GetString("lode.storage.table"),
 	}
 
 	return &st, nil

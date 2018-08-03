@@ -14,7 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 
-	"github.com/dwburke/prefs/api/key"
+	"github.com/dwburke/lode/api/key"
 )
 
 var TestKeys = []struct {
@@ -57,7 +57,7 @@ func TestTranslateKey(t *testing.T) {
 func TestKey(t *testing.T) {
 	viper.SetConfigType("yaml")
 	var yamlExample = []byte(`
-prefs:
+lode:
   port: 4441
   https: true
   search:
@@ -66,7 +66,7 @@ prefs:
   storage:
     type: "memory"
 `)
-	//dsn: "prefs:abc123@/prefs?charset=utf8"
+	//dsn: "lode:abc123@/lode?charset=utf8"
 
 	viper.ReadConfig(bytes.NewBuffer(yamlExample))
 
@@ -75,8 +75,8 @@ prefs:
 	r.Use(cors.Default())
 
 	// setup routes
-	r.GET("/prefs/:context/:key", key.GetKey)
-	r.POST("/prefs/:context/:key", key.SetKey)
+	r.GET("/lode/:context/:key", key.GetKey)
+	r.POST("/lode/:context/:key", key.SetKey)
 
 	// ================
 	// set test
@@ -85,7 +85,7 @@ prefs:
 	form.Add("value", "test.bar")
 	form.Add("customer_id", "123456")
 
-	req, _ := http.NewRequest("POST", "/prefs/dev/foo", strings.NewReader(form.Encode()))
+	req, _ := http.NewRequest("POST", "/lode/dev/foo", strings.NewReader(form.Encode()))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	w := httptest.NewRecorder()
@@ -113,7 +113,7 @@ prefs:
 	// ================
 	// Get test
 
-	req, _ = http.NewRequest("GET", "/prefs/dev/foo", nil)
+	req, _ = http.NewRequest("GET", "/lode/dev/foo", nil)
 
 	q := req.URL.Query()
 	q.Add("customer_id", "123456")

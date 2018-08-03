@@ -1,4 +1,4 @@
-prefs:
+lode:
   port: 4441
   https: true
   search:
@@ -7,5 +7,5 @@ prefs:
   - "{context}.{key}"
   storage:
     type: "mysql"
-    dsn: "prefs:abc123@/prefs?charset=utf8"
-    table: "prefs"
+    dsn: "lode:abc123@/lode?charset=utf8"
+    table: "lode"

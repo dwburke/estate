@@ -6,8 +6,8 @@ test:
 	go test ./...
 
 cert:
-	./prefs generatecert
+	./lode generatecert
 
 run:
-	./prefs api --https
+	./lode api --https
 

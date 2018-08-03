@@ -6,13 +6,13 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/dwburke/prefs/storage"
+	"github.com/dwburke/lode/storage"
 )
 
 func TestStorage(t *testing.T) {
 	viper.SetConfigType("yaml")
 	var yamlExample = []byte(`
-prefs:
+lode:
   port: 4441
   https: true
   search:

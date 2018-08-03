@@ -1,4 +1,4 @@
-# prefs
+# Lode
 Preferences or configuration database, with the ability to specify
 global settings, and per-user or per-server / region /data center/etc overrides.
 
@@ -14,7 +14,7 @@ Configuration is handled by Viper so file formats are flexible...
 Sample yaml config:
 
 ```
-  prefs:
+  lode:
     port: 4441
     https: true
     search:
@@ -22,13 +22,13 @@ Sample yaml config:
     - "{context}.{app}.{key}"
     storage:
       type: "mysql"
-      dns: "dbuser:password@/prefs?charset=utf8"
-      table: "prefs"
+      dns: "dbuser:password@/lode?charset=utf8"
+      table: "lode"
 ```
 
 Example usage:
 
-  `GET /prefs/dev/foo?app=someapp&customer_id=123456`
+  `GET /lode/dev/foo?app=someapp&customer_id=123456`
 
 From the above config, it will search the keys in top down priority.  If 
 customer_id is not in the query, or the derrived key does not have a value,
@@ -41,10 +41,10 @@ Everything else is optional.
 
 ```
 import (
-    prefs_routes "github.com/dwburke/prefs/api/key"
+    lode_routes "github.com/dwburke/lode/api/key"
 )
 ...
-    prefs_routes.SetupRoutes(r)
+    lode_routes.SetupRoutes(r)
 ...
 
 ```
@@ -56,7 +56,7 @@ you don't always have easy access to a config file.
 
 
 ```
-  export PREFS_STORAGE_TYPE=memory
+  export LODE_STORAGE_TYPE=memory
 ```
 
 

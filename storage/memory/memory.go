@@ -3,8 +3,8 @@ package memory
 import (
 	"errors"
 
-	"github.com/dwburke/prefs/storage/common"
-	"github.com/dwburke/prefs/storage/meta"
+	"github.com/dwburke/lode/storage/common"
+	"github.com/dwburke/lode/storage/meta"
 )
 
 var ErrNotFound = errors.New("storage: record not found")
