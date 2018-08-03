@@ -10,21 +10,21 @@ import (
 )
 
 type Storage struct {
-	base meta.Storage
+	engine meta.Storage
 }
 
 func New() (*Storage, error) {
 
 	storage_type := viper.GetString("prefs.storage.type")
 
-	var base meta.Storage
+	var engine meta.Storage
 	var err error
 
 	switch storage_type {
 	case "memory":
-		base, err = memory.New()
+		engine, err = memory.New()
 	case "mysql":
-		base, err = mysql.New()
+		engine, err = mysql.New()
 	default:
 		err = common.ErrInvalidDatabase
 	}
@@ -33,21 +33,21 @@ func New() (*Storage, error) {
 		return nil, err
 	}
 
-	return &Storage{base}, nil
+	return &Storage{engine}, nil
 }
 
 func (store *Storage) Set(key string, value []byte) error {
-	return store.base.Set(key, value)
+	return store.engine.Set(key, value)
 }
 
 func (store *Storage) Get(key string) ([]byte, error) {
-	return store.base.Get(key)
+	return store.engine.Get(key)
 }
 
 func (store *Storage) Delete(key string) error {
-	return store.base.Delete(key)
+	return store.engine.Delete(key)
 }
 
 func (store *Storage) Close() error {
-	return store.base.Close()
+	return store.engine.Close()
 }
