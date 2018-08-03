@@ -23,6 +23,7 @@ Sample yaml config:
     storage:
       type: "mysql"
       dns: "dbuser:password@/prefs?charset=utf8"
+      table: "prefs"
 ```
 
 Example usage:
@@ -64,7 +65,7 @@ you don't always have easy access to a config file.
 - mysql
 
 # Roadmap
-- multiple storage types (queries are partially mysql specific atm)
+- multiple storage types:
   - postgres
   - etcd
   - redis
