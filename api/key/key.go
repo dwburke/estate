@@ -49,7 +49,7 @@ func TranslateKey(template string, p *gin.Params) (string, error) {
 	return template, nil
 }
 
-// Matching all params is deliberately not required, we want "best match"
+// Matching all params is deliberately not required, we want "best/first match"
 func GetKey(c *gin.Context) {
 	search := viper.GetStringSlice("lode.search")
 
