@@ -1,23 +1,62 @@
 package storage
 
 import (
-	"errors"
+	"fmt"
+
+	"github.com/spf13/viper"
+
+	"github.com/dwburke/prefs/storage/common"
+	"github.com/dwburke/prefs/storage/memory"
+	"github.com/dwburke/prefs/storage/meta"
+	"github.com/dwburke/prefs/storage/mysql"
 )
 
-var (
-	ErrNotFound = errors.New("storage: record not found")
-)
-
-func NotFound(e error) bool {
-	if e == ErrNotFound {
-		return true
-	}
-	return false
+type Storage struct {
+	base meta.Storage
 }
 
-type Storage interface {
-	Set(key string, value string) error
-	Get(key string) (string, error)
-	Delete(key string) error
-	Close()
+func init() {
+	viper.SetDefault("prefs.storage.type", "memory")
+	viper.SetDefault("prefs.storage.table", "prefs")
+}
+
+func New() (*Storage, error) {
+
+	storage_type := viper.GetString("prefs.storage.type")
+
+	var base meta.Storage
+	var err error
+
+	fmt.Println("prefs.storage.type:", storage_type)
+
+	switch storage_type {
+	case "memory":
+		base, err = memory.New()
+	case "mysql":
+		base, err = mysql.New()
+	default:
+		err = common.ErrInvalidDatabase
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &Storage{base}, nil
+}
+
+func (store *Storage) Set(key string, value []byte) error {
+	return store.base.Set(key, value)
+}
+
+func (store *Storage) Get(key string) ([]byte, error) {
+	return store.base.Get(key)
+}
+
+func (store *Storage) Delete(key string) error {
+	return store.base.Delete(key)
+}
+
+func (store *Storage) Close() error {
+	return store.base.Close()
 }

@@ -1,33 +1,38 @@
 package memory
 
 import (
-	"github.com/dwburke/prefs/storage"
+	"errors"
+
+	"github.com/dwburke/prefs/storage/common"
+	"github.com/dwburke/prefs/storage/meta"
 )
 
-var MemoryStore map[string]string = map[string]string{}
+var ErrNotFound = errors.New("storage: record not found")
 
-type Keys struct {
-	storage.Storage
+var MemoryStore map[string][]byte = map[string][]byte{}
+
+type Storage struct {
+	meta.Storage
 }
 
-func New() storage.Storage {
-	return &Keys{}
+func New() (*Storage, error) {
+	return &Storage{}, nil
 }
 
-func (e *Keys) Get(key string) (string, error) {
+func (e *Storage) Get(key string) ([]byte, error) {
 	v, ok := MemoryStore[key]
 	if !ok {
-		return "", storage.ErrNotFound
+		return nil, common.ErrNotFound
 	}
 	return v, nil
 }
 
-func (e *Keys) Set(key string, value string) error {
+func (e *Storage) Set(key string, value []byte) error {
 	MemoryStore[key] = value
 	return nil
 }
 
-func (e *Keys) Delete(key string) error {
+func (e *Storage) Delete(key string) error {
 	_, ok := MemoryStore[key]
 	if ok {
 		delete(MemoryStore, key)
@@ -35,6 +40,6 @@ func (e *Keys) Delete(key string) error {
 	return nil
 }
 
-func (e *Keys) Close() {
-	return
+func (e *Storage) Close() error {
+	return nil
 }
