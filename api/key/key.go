@@ -65,8 +65,10 @@ func GetKey(c *gin.Context) {
 	var return_value string
 	var return_key string
 
+	params := tools.AllGinParams(c)
+
 	for _, search_key := range search {
-		trans_key, err := TranslateKey(search_key, &c.Params)
+		trans_key, err := TranslateKey(search_key, &params)
 
 		if err == ErrNotEnoughValues {
 			continue
