@@ -1,7 +1,6 @@
 package storage
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -33,8 +32,6 @@ func New() (*Storage, error) {
 
 	var base meta.Storage
 	var err error
-
-	fmt.Println("prefs.storage.type:", storage_type)
 
 	switch storage_type {
 	case "memory":
