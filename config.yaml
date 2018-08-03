@@ -2,8 +2,9 @@ prefs:
   port: 4441
   https: true
   search:
-  - "{context}.someapp.{customer_id}.{key}"
-  - "{context}.someapp.{key}"
+  - "{context}.{app}.{customer_id}.{key}"
+  - "{context}.{app}.{key}"
+  - "{context}.{key}"
   storage:
     type: "mysql"
     dsn: "prefs:abc123@/prefs?charset=utf8"
