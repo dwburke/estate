@@ -2,6 +2,7 @@ package storage
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/spf13/viper"
 
@@ -16,8 +17,14 @@ type Storage struct {
 }
 
 func init() {
+	replacer := strings.NewReplacer(".", "_")
+	viper.SetEnvKeyReplacer(replacer)
+
 	viper.SetDefault("prefs.storage.type", "memory")
 	viper.SetDefault("prefs.storage.table", "prefs")
+
+	viper.AutomaticEnv()
+
 }
 
 func New() (*Storage, error) {
