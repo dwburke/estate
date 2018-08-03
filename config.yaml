@@ -6,4 +6,5 @@ prefs:
   - "{context}.someapp.{key}"
   storage:
     type: "mysql"
-    dns: "prefs:abc123@/prefs?charset=utf8"
+    dsn: "prefs:abc123@/prefs?charset=utf8"
+    table: "prefs"
