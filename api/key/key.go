@@ -7,7 +7,7 @@ import (
 	"regexp"
 
 	"github.com/dwburke/prefs/storage"
-	"github.com/dwburke/prefs/storage/memory"
+	"github.com/dwburke/prefs/storage/common"
 
 	"github.com/dwburke/go-tools"
 	"github.com/gin-gonic/gin"
@@ -53,16 +53,22 @@ func TranslateKey(template string, p *gin.Params) (string, error) {
 func GetKey(c *gin.Context) {
 	search := viper.GetStringSlice("prefs.search")
 
-	// TODO - not the same instance of storage, go find the pages on db middleware
-	var st storage.Storage
-	st = memory.New()
+	st, err := storage.New()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "error opening database",
+		})
+		return
+	}
 	defer st.Close()
 
 	var return_value string
 	var return_key string
 
+	params := tools.AllGinParams(c)
+
 	for _, search_key := range search {
-		trans_key, err := TranslateKey(search_key, &c.Params)
+		trans_key, err := TranslateKey(search_key, &params)
 
 		if err == ErrNotEnoughValues {
 			continue
@@ -78,7 +84,7 @@ func GetKey(c *gin.Context) {
 		val, err := st.Get(trans_key)
 
 		// no rows, try next key
-		if err == storage.ErrNotFound {
+		if err == common.ErrNotFound {
 			continue
 		}
 
@@ -91,8 +97,8 @@ func GetKey(c *gin.Context) {
 		}
 
 		// value? found it!
-		if val != "" {
-			return_value = val
+		if val != nil {
+			return_value = string(val)
 			return_key = trans_key
 			break
 		}
@@ -151,11 +157,16 @@ func SetKey(c *gin.Context) {
 	}
 
 	// storage object
-	var st storage.Storage
-	st = memory.New()
+	st, err := storage.New()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "error opening database",
+		})
+		return
+	}
 	defer st.Close()
 
-	err := st.Set(return_key, param_value)
+	err = st.Set(return_key, []byte(param_value))
 	if err != nil {
 		c.JSON(500, gin.H{
 			"error": fmt.Sprintf("Error setting value: %s", err),
@@ -173,8 +184,13 @@ func SetKey(c *gin.Context) {
 func DeleteKey(c *gin.Context) {
 	search := viper.GetStringSlice("prefs.search")
 
-	var st storage.Storage
-	st = memory.New()
+	st, err := storage.New()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "error opening database",
+		})
+		return
+	}
 	defer st.Close()
 
 	var return_key string
