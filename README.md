@@ -32,7 +32,7 @@ Example usage:
 
 From the above config, it will search the keys in top down priority.  If 
 customer_id is not in the query, or the derrived key does not have a value,
-it will move on to the next key up.
+it will move on to the next key down.
 
 ":context" and ":key" are part of the http routing ('dev' and 'foo').
 Everything else is optional.
