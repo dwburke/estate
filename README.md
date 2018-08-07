@@ -2,7 +2,7 @@
 Preferences or configuration database, with the ability to specify
 global settings, and per-user or per-server / region /data center/etc overrides.
 
-## Work in progress... should be fully functional
+## Pretty much fully functional
 - delete isn't safe in some ways yet, and has no tests committed
 
 For example, say you have an application (or microservice) that you you want all
