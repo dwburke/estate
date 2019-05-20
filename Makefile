@@ -6,8 +6,8 @@ test:
 	go test ./...
 
 cert:
-	./lode generatecert
+	./estate generatecert
 
 run:
-	./lode api --https
+	./estate api --https
 

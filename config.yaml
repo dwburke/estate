@@ -1,4 +1,4 @@
-lode:
+estate:
   port: 4441
   https: true
   search:
@@ -7,5 +7,5 @@ lode:
   - "{context}.{key}"
   storage:
     type: "mysql"
-    dsn: "lode:abc123@/lode?charset=utf8"
-    table: "lode"
+    dsn: "estate:abc123@/estate?charset=utf8"
+    table: "estate"

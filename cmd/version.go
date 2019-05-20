@@ -12,9 +12,9 @@ func init() {
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Print the version number of lode",
+	Short: "Print the version number of estate",
 	Long:  `All software has versions. This is mine.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("lode - v0.1 -- HEAD")
+		fmt.Println("estate - v0.1 -- HEAD")
 	},
 }

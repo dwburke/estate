@@ -5,15 +5,15 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/dwburke/lode/cmd"
+	"github.com/dwburke/estate/cmd"
 )
 
 func init() {
 	replacer := strings.NewReplacer(".", "_")
 	viper.SetEnvKeyReplacer(replacer)
 
-	viper.SetDefault("lode.storage.type", "memory")
-	viper.SetDefault("lode.storage.table", "lode")
+	viper.SetDefault("estate.storage.type", "memory")
+	viper.SetDefault("estate.storage.table", "estate")
 
 	viper.AutomaticEnv()
 }

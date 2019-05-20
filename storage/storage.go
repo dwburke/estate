@@ -3,10 +3,10 @@ package storage
 import (
 	"github.com/spf13/viper"
 
-	"github.com/dwburke/lode/storage/common"
-	"github.com/dwburke/lode/storage/memory"
-	"github.com/dwburke/lode/storage/meta"
-	"github.com/dwburke/lode/storage/mysql"
+	"github.com/dwburke/estate/storage/common"
+	"github.com/dwburke/estate/storage/memory"
+	"github.com/dwburke/estate/storage/meta"
+	"github.com/dwburke/estate/storage/mysql"
 )
 
 type Storage struct {
@@ -15,7 +15,7 @@ type Storage struct {
 
 func New() (*Storage, error) {
 
-	storage_type := viper.GetString("lode.storage.type")
+	storage_type := viper.GetString("estate.storage.type")
 
 	var engine meta.Storage
 	var err error

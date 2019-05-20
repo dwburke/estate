@@ -10,8 +10,8 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "lode",
-	Short: "lode is a thing",
+	Use:   "estate",
+	Short: "estate is a thing",
 	Long:  `Love me`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Usage()
@@ -41,7 +41,7 @@ func initConfig() {
 		// Search config in home directory with name ".cobra" (without extension).
 		viper.AddConfigPath(home)
 		viper.AddConfigPath("./")
-		viper.SetConfigName(".lode")
+		viper.SetConfigName(".estate")
 	}
 
 	if err := viper.ReadInConfig(); err != nil {

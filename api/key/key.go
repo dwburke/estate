@@ -6,8 +6,8 @@ import (
 	//"reflect"
 	"regexp"
 
-	"github.com/dwburke/lode/storage"
-	"github.com/dwburke/lode/storage/common"
+	"github.com/dwburke/estate/storage"
+	"github.com/dwburke/estate/storage/common"
 
 	"github.com/dwburke/go-tools"
 	"github.com/gin-gonic/gin"
@@ -15,14 +15,14 @@ import (
 )
 
 var (
-	ErrNotEnoughValues = errors.New("lode: not enough values")
-	//ErrAllValuesNotUsed = errors.New("lode: not found")
+	ErrNotEnoughValues = errors.New("estate: not enough values")
+	//ErrAllValuesNotUsed = errors.New("estate: not found")
 )
 
 func SetupRoutes(r *gin.Engine) {
-	r.GET("/lode/:context/:key", GetKey)
-	r.POST("/lode/:context/:key", SetKey)
-	r.DELETE("/lode/:context/:key", DeleteKey)
+	r.GET("/estate/:context/:key", GetKey)
+	r.POST("/estate/:context/:key", SetKey)
+	r.DELETE("/estate/:context/:key", DeleteKey)
 }
 
 // take key template and try to replace everything with param's passed to api
@@ -51,7 +51,7 @@ func TranslateKey(template string, p *gin.Params) (string, error) {
 
 // Matching all params is deliberately not required, we want "best/first match"
 func GetKey(c *gin.Context) {
-	search := viper.GetStringSlice("lode.search")
+	search := viper.GetStringSlice("estate.search")
 
 	st, err := storage.New()
 	if err != nil {
@@ -134,7 +134,7 @@ func SetKey(c *gin.Context) {
 
 	var return_key string
 
-	search := viper.GetStringSlice("lode.search")
+	search := viper.GetStringSlice("estate.search")
 
 	// find matching key to set based on passed in variables
 	for _, search_key := range search {
@@ -182,7 +182,7 @@ func SetKey(c *gin.Context) {
 
 // TODO - matching all params is required
 func DeleteKey(c *gin.Context) {
-	search := viper.GetStringSlice("lode.search")
+	search := viper.GetStringSlice("estate.search")
 
 	st, err := storage.New()
 	if err != nil {
